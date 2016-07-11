@@ -15,8 +15,10 @@ import android.widget.EditText;
 
 import com.demo.NotePad.R;
 import com.demo.NotePad.model.Crime;
+import com.demo.NotePad.model.CrimeTab;
 
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 /**
  * Created by Administrator on 2016/7/7.
@@ -26,11 +28,16 @@ public class CrimeFragment extends Fragment {
     private EditText mTitleText;
     private Button mDataButton;
     private CheckBox mSolvedCheckBox;
+    public static final String EXTRA_ID = "com.demo.crime_id";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCrime = new Crime();
+        //得到UUID通过getSerializableExtrad， 然后从CrimeTab中通过id得到该对象！！！
+        UUID crimeID = (UUID) getActivity().getIntent().getSerializableExtra(EXTRA_ID);
+        mCrime = CrimeTab.get(getActivity()).getCrime(crimeID);
+
     }
 
     @Nullable
@@ -38,6 +45,8 @@ public class CrimeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_crime, container,false);
         mTitleText = (EditText) view.findViewById(R.id.crime_title);
+
+        mTitleText.setText(mCrime.getTitle());
        //添加EditText监听器
         mTitleText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -62,6 +71,7 @@ public class CrimeFragment extends Fragment {
         mDataButton.setEnabled(false);//设置不可以点击
         //单选设置
         mSolvedCheckBox = (CheckBox) view.findViewById(R.id.solve_cb);
+        mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
