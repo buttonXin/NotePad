@@ -8,11 +8,14 @@ import android.os.Bundle;
 import com.demo.NotePad.R;
 import com.demo.NotePad.fragment.CrimeFragment;
 
+import java.util.UUID;
+
 public class CrimeActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new CrimeFragment();
+        UUID createId = (UUID) getIntent().getSerializableExtra(CrimeFragment.EXTRA_ID);
+        return CrimeFragment.newInstance(createId);
     }
 
 }

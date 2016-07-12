@@ -1,5 +1,6 @@
 package com.demo.NotePad.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,7 +36,7 @@ public class CrimeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mCrime = new Crime();
         //得到UUID通过getSerializableExtrad， 然后从CrimeTab中通过id得到该对象！！！
-        UUID crimeID = (UUID) getActivity().getIntent().getSerializableExtra(EXTRA_ID);
+        UUID crimeID = (UUID) getArguments().getSerializable(EXTRA_ID);
         mCrime = CrimeTab.get(getActivity()).getCrime(crimeID);
 
     }
@@ -79,5 +80,15 @@ public class CrimeFragment extends Fragment {
             }
         });
         return view;
+    }
+    public static Fragment newInstance(UUID id){
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_ID , id);
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+    public void  returnResult(){//因为fragment没有setResult方法，所以需要用托管的activity的这个方法
+        getActivity().setResult(Activity.RESULT_OK  ,null);
     }
 }
