@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.demo.NotePad.R;
-import com.demo.NotePad.activity.CrimeActivity;
+import com.demo.NotePad.activity.CrimePagerActivity;
 import com.demo.NotePad.model.Crime;
 import com.demo.NotePad.model.CrimeTab;
 
@@ -42,7 +42,7 @@ public class CrimeListFragment extends ListFragment {
         //getListAdapter得到强转的adapter，因为泛型了Crime也不用再次需要强转了！
         Crime c = ((CrimeAdapter) getListAdapter()).getItem(position);
 
-        Intent intent = new Intent(getActivity() , CrimeActivity.class);
+        Intent intent = new Intent(getActivity() , CrimePagerActivity.class);
         //这里的UUID是Serializable对象，put的是Serializable
         intent.putExtra(CrimeFragment.EXTRA_ID , c.getID());
         startActivityForResult(intent, REQUEST_CRIME);

@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">记事本</string>
     <string name="crime_title_hint">请输入笔记</string>
+    <string name="date_picker_title">选择时间</string>
+    <string name="date_for_ok">确认</string>
 </resources>

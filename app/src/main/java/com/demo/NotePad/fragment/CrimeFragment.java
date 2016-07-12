@@ -1,9 +1,12 @@
 package com.demo.NotePad.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import com.demo.NotePad.model.Crime;
 import com.demo.NotePad.model.CrimeTab;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -30,6 +34,8 @@ public class CrimeFragment extends Fragment {
     private Button mDataButton;
     private CheckBox mSolvedCheckBox;
     public static final String EXTRA_ID = "com.demo.crime_id";
+    private static  final String DIALOG_DATE= "date"; //设置dialog的标记
+    private static final int REQUEST_DATE = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,11 +72,22 @@ public class CrimeFragment extends Fragment {
             }
         });
         mDataButton = (Button) view.findViewById(R.id.data_btn);
-        //这里注意下小写y，大写M，小写d ；大写E； 后面的大写H，小写m，小写s。
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 EEE HH:mm:ss");
-        mDataButton.setText(   sdf.format(mCrime.getDate())  );//得到2016年07月09日 周六 10:12:31
-        mDataButton.setEnabled(false);//设置不可以点击
-        //单选设置
+        //这里注意下小写y，大写M，小写d ；大写E； 后面的大写H，小写m，小写s。//得到2016年07月09日 周六 10:12:31
+       // SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 EEE HH:mm:ss");
+       updateDate();
+       //这里设置选择日期的对话框！
+        mDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override//这里通过静态方法 得到bundle中的date
+            public void onClick(View v) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+                //设置目标fragment
+                dialog.setTargetFragment(CrimeFragment.this , REQUEST_DATE);
+                //这里是将Fragment放到manger的队列中并  添加标签  来识别是不是dialogFragment
+                dialog.show(fm ,DIALOG_DATE);
+            }
+        });
+        //复选框设置
         mSolvedCheckBox = (CheckBox) view.findViewById(R.id.solve_cb);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -90,5 +107,20 @@ public class CrimeFragment extends Fragment {
     }
     public void  returnResult(){//因为fragment没有setResult方法，所以需要用托管的activity的这个方法
         getActivity().setResult(Activity.RESULT_OK  ,null);
+    }
+
+    //响应dialogFragment的onActivityResult方法
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode != Activity.RESULT_OK) return;
+        if(requestCode == REQUEST_DATE){
+            Date d  = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCrime.setDate(d);
+            updateDate();
+        }
+    }
+    private void updateDate(){
+        mDataButton.setText(mCrime.getDate().toString());
+
     }
 }
