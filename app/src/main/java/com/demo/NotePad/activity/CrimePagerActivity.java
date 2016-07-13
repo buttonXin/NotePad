@@ -56,8 +56,14 @@ public class CrimePagerActivity extends FragmentActivity {
             @Override//这个是当前页面是那个
             public void onPageSelected(int position) {
                 Crime c = mCrimes.get(position);//将title更改下
-                if(c.getTitle() != null )
-                setTitle(c.getTitle());
+                if(c.getTitle() != null ) {
+                    char[] chars = c.getTitle().toCharArray();
+                    if(chars.length > 5 ) {
+                        setTitle(c.getTitle().substring(0, 5));
+                    }else {
+                        setTitle(c.getTitle());
+                    }
+                }
             }
             @Override//这个是页面的行为状态！
             public void onPageScrollStateChanged(int state) {

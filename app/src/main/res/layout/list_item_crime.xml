@@ -21,7 +21,9 @@
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:textStyle="bold"
-        android:text="title"/>
+        android:text="title"
+        android:singleLine="true"
+        />
 
     <TextView
         android:id="@+id/crime_list_item_dateTV"

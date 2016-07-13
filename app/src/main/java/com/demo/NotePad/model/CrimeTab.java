@@ -16,12 +16,12 @@ public class CrimeTab {
     private CrimeTab (Context appContext){
         mAppContext = appContext;
         mCrimes = new ArrayList<Crime>();
-        for (int i = 0; i <50 ; i++) {
+        /*for (int i = 0; i <50 ; i++) {
             Crime c = new Crime();
             c.setTitle("title + "+i);
             c.setSolved( i%2 == 0 );
             mCrimes.add(c);//添加50个记录到集合中
-        }
+        }*/
     }
     public static CrimeTab get(Context c){
         if(sCrimeTab == null){
@@ -41,5 +41,8 @@ public class CrimeTab {
             }
         }
         return null;
+    }
+    public void addCrime(Crime c){
+        mCrimes.add(c);
     }
 }
