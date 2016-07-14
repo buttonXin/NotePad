@@ -59,8 +59,8 @@ public class CrimeFragment extends Fragment {
        //启动向上导航
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
             //这里记住要再次判断下,记得在清单文件中的Meta-date
-            if (NavUtils.getParentActivityName(getActivity()) != null)
-            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+           /* if (NavUtils.getParentActivityName(getActivity()) != null)
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);*/
     }
         mTitleText = (EditText) view.findViewById(R.id.crime_title);
         mTitleText.setText(mCrime.getTitle());
@@ -145,5 +145,14 @@ public class CrimeFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    /*
+    在onPause中 进行保存数据
+    * */
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CrimeTab.get(getActivity()).saveCrimes();
     }
 }

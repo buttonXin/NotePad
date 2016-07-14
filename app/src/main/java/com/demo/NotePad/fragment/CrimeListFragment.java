@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,7 +43,19 @@ public class CrimeListFragment extends ListFragment {
         setListAdapter(adapter);
         //通知FragmentManager需要用到Menu
         setHasOptionsMenu(true);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View  view = inflater.inflate(R.layout.fragment_list_crime , null);
+        final Button addCrimeBtn = (Button) view.findViewById(R.id.add_crime_btn);
+        addCrimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addCrime();
+            }
+        });
+        return view;
     }
 
     @Override
@@ -115,20 +129,32 @@ public class CrimeListFragment extends ListFragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_crime_list , menu);
     }
-
+    @TargetApi(11)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_new_crime:
-                Crime crime = new Crime();
-                CrimeTab.get(getActivity()).getCrimes().add(crime);
-                Intent intent = new Intent(getActivity() , CrimePagerActivity.class);
-                intent.putExtra(CrimeFragment.EXTRA_ID , crime.getID());
-                startActivityForResult(intent , 0);
+                addCrime();
                 return true;
+            /*case R.id.menu_item_show_subtitle:
+                //如果副标题=null的话显示出来，将子标题隐藏
+                if (getActivity().getActionBar().getSubtitle() == null){
+                    getActivity().getActionBar().setSubtitle(R.string.subtitle);
+                    item.setTitle(R.string.hide_subtitle);
+                }else {
+                    getActivity().getActionBar().setSubtitle(null);
+                    item.setTitle(R.string.show_subtitle);
+                }*/
             default:
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+    private void addCrime(){
+        Crime crime = new Crime();
+        CrimeTab.get(getActivity()).getCrimes().add(crime);
+        Intent intent = new Intent(getActivity() , CrimePagerActivity.class);
+        intent.putExtra(CrimeFragment.EXTRA_ID , crime.getID());
+        startActivityForResult(intent , 0);
     }
 }

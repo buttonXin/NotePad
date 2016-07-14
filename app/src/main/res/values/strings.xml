@@ -4,4 +4,8 @@
     <string name="date_picker_title">选择时间</string>
     <string name="date_for_ok">确认</string>
     <string name="new_crime">新建</string>
+    <string name="show_subtitle">副标题</string>
+    <string name="hide_subtitle">隐藏标题</string>
+    <string name="subtitle">将你看到的事情写下来</string>
+    <string name="delete_crime">删除记录</string>
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--showAsAction，ifRoom代表操作栏空间足够大就都显示，不够大就显示图标，再小就隐藏到菜单中-->
+    <item android:id="@+id/menu_item_new_crime"
+          android:icon="@android:drawable/ic_menu_add"
+          android:title="@string/new_crime"
+          android:showAsAction="ifRoom|withText">
+
+    </item>
+    <item android:id="@+id/menu_item_show_subtitle"
+          android:title="@string/show_subtitle"
+          android:showAsAction="ifRoom">
+    </item>
+</menu>
