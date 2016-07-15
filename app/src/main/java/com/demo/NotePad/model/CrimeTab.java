@@ -50,9 +50,7 @@ public class CrimeTab {
         }
         return null;
     }
-    public void addCrime(Crime c){
-        mCrimes.add(c);
-    }
+
     public boolean saveCrimes()  {
         try {
             mSerializer.saveCrimes(mCrimes);
@@ -62,5 +60,12 @@ public class CrimeTab {
             //Toast.makeText(mAppContext ,"save fail" +e.toString(), Toast.LENGTH_SHORT).show();
             return false ;
         }
+    }
+
+    public void addCrime(Crime c){
+        mCrimes.add(c);
+    }
+    public void deleteCrime(Crime crime){
+        mCrimes.remove(crime);
     }
 }

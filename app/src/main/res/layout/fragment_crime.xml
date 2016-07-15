@@ -22,7 +22,7 @@
         android:id="@+id/details_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="细节"
+        android:text="时间"
         style="?android:listSeparatorTextViewStyle"/>
     <Button
         android:id="@+id/data_btn"

@@ -2,15 +2,20 @@ package com.demo.NotePad.fragment;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
+import android.view.ActionMode;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -44,7 +49,7 @@ public class CrimeListFragment extends ListFragment {
         //通知FragmentManager需要用到Menu
         setHasOptionsMenu(true);
     }
-
+    @TargetApi(11)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View  view = inflater.inflate(R.layout.fragment_list_crime , null);
@@ -53,6 +58,56 @@ public class CrimeListFragment extends ListFragment {
             @Override
             public void onClick(View v) {
                 addCrime();
+            }
+        });
+        //为浮动上下文菜单登记视图，因为是ListView所有登记后会将所有的子视图登记到里面去
+        final ListView listView = (ListView) view.findViewById(android.R.id.list);
+        //多选模式
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            registerForContextMenu(listView);
+        }else {
+            listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        }
+        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+
+            }
+            //在这里创建menu——delete 列表,true
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater1 = mode.getMenuInflater();
+                inflater1.inflate(R.menu.crime_list_item_context ,menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+            //在这里进行选择操作
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_item_delete_crime:
+                        CrimeAdapter adapter = (CrimeAdapter) getListAdapter();
+                        CrimeTab crimeTab = CrimeTab.get(getActivity());
+                        for (int i = adapter.getCount(); i > 0 ; i-- ) {
+                            if(getListView().isItemChecked(i)) {
+                                crimeTab.deleteCrime(adapter.getItem(i));
+                            }
+                        }
+                        mode.finish();
+                        adapter.notifyDataSetChanged();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
             }
         });
         return view;
@@ -122,8 +177,8 @@ public class CrimeListFragment extends ListFragment {
         super.onResume();
         ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
     }
-    //创建菜单选项
 
+    //创建菜单选项
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -131,25 +186,44 @@ public class CrimeListFragment extends ListFragment {
     }
     @TargetApi(11)
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)throws NullPointerException {
         switch (item.getItemId()){
             case R.id.menu_item_new_crime:
                 addCrime();
                 return true;
-            /*case R.id.menu_item_show_subtitle:
-                //如果副标题=null的话显示出来，将子标题隐藏
-                if (getActivity().getActionBar().getSubtitle() == null){
-                    getActivity().getActionBar().setSubtitle(R.string.subtitle);
-                    item.setTitle(R.string.hide_subtitle);
-                }else {
-                    getActivity().getActionBar().setSubtitle(null);
-                    item.setTitle(R.string.show_subtitle);
-                }*/
             default:
                 return super.onOptionsItemSelected(item);
 
         }
     }
+    //创建上下文菜单
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
+    }
+    //响应上下文菜单
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+       //得到选中子列表的位置
+        AdapterView.AdapterContextMenuInfo info =
+                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int position = info.position;
+        CrimeAdapter adapter = (CrimeAdapter) getListAdapter();
+        Crime crime = adapter.getItem(position);
+
+        switch (item.getItemId()){
+            case R.id.menu_item_delete_crime:
+                CrimeTab.get(getActivity()).deleteCrime(crime);
+                adapter.notifyDataSetChanged();
+                return true ;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    //添加记录
     private void addCrime(){
         Crime crime = new Crime();
         CrimeTab.get(getActivity()).getCrimes().add(crime);
@@ -157,4 +231,5 @@ public class CrimeListFragment extends ListFragment {
         intent.putExtra(CrimeFragment.EXTRA_ID , crime.getID());
         startActivityForResult(intent , 0);
     }
+
 }
