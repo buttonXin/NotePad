@@ -2,6 +2,7 @@ package com.demo.NotePad.fragment;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,8 +23,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.demo.NotePad.R;
+import com.demo.NotePad.activity.CrimeCameraActivity;
 import com.demo.NotePad.model.Crime;
 import com.demo.NotePad.model.CrimeTab;
 
@@ -42,6 +46,9 @@ public class CrimeFragment extends Fragment {
     public static final String EXTRA_ID = "com.demo.crime_id";
     private static  final String DIALOG_DATE= "date"; //设置dialog的标记
     private static final int REQUEST_DATE = 0;
+    private ImageButton mImageButton;
+    private static final int REQUEST_TAKE_PHOTO = 1;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +113,15 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+            }
+        });
+        //图片按钮
+        mImageButton = (ImageButton) view.findViewById(R.id.fragment_crime_image);
+        mImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity() , CrimeCameraActivity.class);
+                startActivityForResult(intent , REQUEST_TAKE_PHOTO);
             }
         });
         return view;

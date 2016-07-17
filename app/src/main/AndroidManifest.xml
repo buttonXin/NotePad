@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.demo.NotePad">
 
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!--这个配置是让有相机功能的设备，在GooglePlay上才能看到自己发布的app, 这个过时了....-->
+    <!--<uses-feature android:name="android.hardware.camera2"/>-->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,6 +26,10 @@
 
             </meta-data>
         </activity>
+        <!--screenOrientation  这个是保证屏幕不会旋转！！-->
+        <activity android:name=".activity.CrimeCameraActivity"
+            android:screenOrientation="landscape"
+            android:label="@string/app_name"/>
     </application>
 
 </manifest>
