@@ -42,6 +42,7 @@ public class CrimeFragment extends Fragment {
     private Crime mCrime;
     private EditText mTitleText;
     private Button mDataButton;
+    private String testsuccess;
     private CheckBox mSolvedCheckBox;
     public static final String EXTRA_ID = "com.demo.crime_id";
     private static  final String DIALOG_DATE= "date"; //设置dialog的标记
